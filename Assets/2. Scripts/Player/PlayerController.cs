@@ -7,6 +7,8 @@ public class PlayerController : MonoBehaviour
 {
     [SerializeField] private float walkSpeed = 5;
     [SerializeField] private float runSpeend = 8;
+    [SerializeField] private float airWalkSpeend = 3;
+    [SerializeField] private float airRunSpeend = 5;
     [SerializeField] private float jumpImpulse = 10;
     Rigidbody2D rb;
     Vector2 moveInput;
@@ -16,6 +18,7 @@ public class PlayerController : MonoBehaviour
     private bool _isMoving = false;
     private bool _isFacingRight = true;
 
+    public bool CanMove {  get { return animator.GetBool("CanMove"); } }
     public bool IsFacingRight
     {
         get { return _isFacingRight; }
@@ -39,10 +42,24 @@ public class PlayerController : MonoBehaviour
     {
         get
         {
-            if (isMoving)
+            if (CanMove)
             {
-                if (isRuning) return runSpeend;
-                else return walkSpeed;
+                if (isMoving && !touchingDirections.IsOnWall)
+                {
+                    if (touchingDirections.IsGrounded)
+                    {
+                        if (isRuning) return runSpeend;
+                        else return walkSpeed;
+                    }
+                    else
+                    {
+                        if (isRuning) return airRunSpeend;
+                        else return airWalkSpeend;
+                    }
+                }
+                else {
+                    return 0;
+                }
             }
             else return 0;
         }
@@ -109,6 +126,14 @@ public class PlayerController : MonoBehaviour
         {
             animator.SetTrigger("Jump");
             rb.velocity = new Vector2 (rb.velocity.x, jumpImpulse);
+        }
+    }
+
+    public void OnFire(InputAction.CallbackContext content)
+    {
+        if (content.started && touchingDirections.IsGrounded)
+        {
+            animator.SetTrigger("Attack");
         }
     }
 

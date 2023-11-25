@@ -18,22 +18,28 @@ public class Knight : MonoBehaviour
     CapsuleCollider2D capsuleCollider;
     touchingDirections touchingDirections;
     Animator animator;
+    DamageAble damageable;
         
     private Vector2 walkDirectionVector = Vector2.right;
     private WalkableDirection walkDirection = WalkableDirection.Right;
     [SerializeField] private bool _hasTarget = false;
     [SerializeField] private DetectionZone attackZone;
 
+    public float AttackCooltime
+    {
+        get { return animator.GetFloat(AnimationStrings.AttackCoolDown); }
+        set { animator.SetFloat(AnimationStrings.AttackCoolDown, Mathf.Max(value, 0)); }
+    }
     public bool HasTarget {
         get { return _hasTarget; }
         private set 
         {
             _hasTarget = value;
-            animator.SetBool("HasTarget", value);
+            animator.SetBool(AnimationStrings.HasTarget, value);
         }
     }
 
-    public bool CanMove { get { return animator.GetBool("CanMove"); } }
+    public bool CanMove { get { return animator.GetBool(AnimationStrings.CanMove); } }
 
     public WalkableDirection WalkDirection
     {
@@ -58,19 +64,27 @@ public class Knight : MonoBehaviour
         capsuleCollider = GetComponent<CapsuleCollider2D>();
         touchingDirections = GetComponent<touchingDirections>();
         animator = GetComponent<Animator>();
+        damageable = GetComponent<DamageAble>();
     }
 
     private void Update()
     {
         HasTarget = attackZone.detectedColiders.Count > 0;
+        if(AttackCooltime > 0)
+        {
+            AttackCooltime -= Time.deltaTime;
+        }
     }
 
     void FixedUpdate()
     {
         if(touchingDirections.IsGrounded && touchingDirections.IsOnWall) FlipDirection();
 
-        if(CanMove) rb.velocity = new Vector2(walkSpeed * walkDirectionVector.x, rb.velocity.y);
-        else rb.velocity = new Vector2(0 * walkDirectionVector.x, rb.velocity.y);
+        if (!damageable.LockVelocity)
+        {
+            if (CanMove) rb.velocity = new Vector2(walkSpeed * walkDirectionVector.x, rb.velocity.y);
+            else rb.velocity = new Vector2(0 * walkDirectionVector.x, rb.velocity.y);
+        }
     }
 
     private void FlipDirection() { 
@@ -84,5 +98,10 @@ public class Knight : MonoBehaviour
         {
             FlipDirection();
         }
+    }
+
+    public void OnHit(Vector2 knockback)
+    {
+        rb.velocity = new Vector2(knockback.x, rb.velocity.y + knockback.y);
     }
 }

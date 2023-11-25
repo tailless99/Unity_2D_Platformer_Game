@@ -14,11 +14,12 @@ public class PlayerController : MonoBehaviour
     Vector2 moveInput;
     Animator animator;
     touchingDirections touchingDirections;
+    DamageAble damageAble;
     private bool _isRunning = false;
     private bool _isMoving = false;
     private bool _isFacingRight = true;
 
-    public bool CanMove {  get { return animator.GetBool("CanMove"); } }
+    public bool CanMove {  get { return animator.GetBool(AnimationStrings.CanMove); } }
     public bool IsFacingRight
     {
         get { return _isFacingRight; }
@@ -74,7 +75,7 @@ public class PlayerController : MonoBehaviour
         set
         {
             _isMoving = value;
-            animator.SetBool("isMoving", _isMoving);
+            animator.SetBool(AnimationStrings.IsMoving, _isMoving);
         }
     }
 
@@ -87,7 +88,7 @@ public class PlayerController : MonoBehaviour
         set
         {
             _isRunning = value;
-             animator.SetBool("isRunning", _isRunning);
+             animator.SetBool(AnimationStrings.IsRunning, _isRunning);
         }
     }
 
@@ -124,7 +125,7 @@ public class PlayerController : MonoBehaviour
     public void OnJump(InputAction.CallbackContext content) { 
         if(content.started && touchingDirections.IsGrounded)
         {
-            animator.SetTrigger("Jump");
+            animator.SetTrigger(AnimationStrings.Jump);
             rb.velocity = new Vector2 (rb.velocity.x, jumpImpulse);
         }
     }
@@ -133,13 +134,20 @@ public class PlayerController : MonoBehaviour
     {
         if (content.started && touchingDirections.IsGrounded)
         {
-            animator.SetTrigger("Attack");
+            animator.SetTrigger(AnimationStrings.Attack);
         }
     }
 
     private void FixedUpdate()
     {
-        rb.velocity = new Vector2(moveInput.x * CurrentMoveSpeed, rb.velocity.y);
-        animator.SetFloat("yVelocity", rb.velocity.y);
+        if (!damageAble) {
+            rb.velocity = new Vector2(moveInput.x * CurrentMoveSpeed, rb.velocity.y);
+        }        
+        animator.SetFloat(AnimationStrings.yVelocity, rb.velocity.y);
+    }
+
+    public void OnHit(Vector2 knockback)
+    {
+        rb.velocity = new Vector2(knockback.x, rb.velocity.y + knockback.y);
     }
 }

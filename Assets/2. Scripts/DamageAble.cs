@@ -9,6 +9,7 @@ public class DamageAble : MonoBehaviour
     [SerializeField] private int _health = 10; // 현재 체력    
     [SerializeField] private bool _isAlive = true; // 생존여부
     Animator animator;
+    public UnityEvent<int, int> healthChanged;
     public UnityEvent<Vector2> damageableHit;
     public bool LockVelocity
     {
@@ -34,7 +35,9 @@ public class DamageAble : MonoBehaviour
     {
         get { return _health; }
         set { 
-            _health = value; 
+            _health = value;
+            healthChanged?.Invoke(_health, MaxHealth);
+
             if(_health <= 0)
             {
                 IsAlive = false;
@@ -47,7 +50,7 @@ public class DamageAble : MonoBehaviour
         animator = GetComponent<Animator>();
     }
 
-    public void GetHit(int attackDamage, Vector2 knockBack) {
+    public bool GetHit(int attackDamage, Vector2 knockBack) {
         if (IsAlive)
         {
             Health -= attackDamage;
@@ -56,7 +59,10 @@ public class DamageAble : MonoBehaviour
                 animator.SetTrigger(AnimationStrings.Hit);
                 damageableHit?.Invoke(knockBack);
             }
+            CharacterEvents.CharacterDamaged?.Invoke(this.gameObject, attackDamage);
+            return true;
         }
+        else return false;
     }
 
     public bool Heal(int HealthRestore)
@@ -67,7 +73,7 @@ public class DamageAble : MonoBehaviour
             int actualHeal = Mathf.Min(maxHeal, HealthRestore);
 
             Health += actualHeal;
-            Debug.Log(Health);
+            CharacterEvents.CharacterHealed?.Invoke(this.gameObject, actualHeal);
             return true;
         }
         return false;

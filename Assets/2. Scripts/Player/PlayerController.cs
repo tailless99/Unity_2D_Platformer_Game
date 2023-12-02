@@ -107,6 +107,13 @@ public class PlayerController : MonoBehaviour
         else if (moveinPut.x < 0 && IsFacingRight) IsFacingRight = false;
     }
 
+    public void OnRangedAttack(InputAction.CallbackContext context)
+    {
+        if(context.started && touchingDirections.IsGrounded)
+        {
+            animator.SetTrigger(AnimationStrings.RangedAttack);
+        }
+    }
     public void OnMove(InputAction.CallbackContext content)
     {
         moveInput = content.ReadValue<Vector2>();

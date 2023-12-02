@@ -13,7 +13,10 @@ public enum WalkableDirection
 [RequireComponent(typeof(touchingDirections))]
 public class Knight : MonoBehaviour
 {
-    public float walkSpeed = 3.0f;
+    public float MaxSpeed = 3.0f;
+    public float walkAcceleration = 7.0f;
+    public float walkStopRate = 0.6f;
+
     Rigidbody2D rb;
     CapsuleCollider2D capsuleCollider;
     touchingDirections touchingDirections;
@@ -82,8 +85,13 @@ public class Knight : MonoBehaviour
 
         if (!damageable.LockVelocity)
         {
-            if (CanMove) rb.velocity = new Vector2(walkSpeed * walkDirectionVector.x, rb.velocity.y);
-            else rb.velocity = new Vector2(0 * walkDirectionVector.x, rb.velocity.y);
+            if (CanMove && touchingDirections.IsGrounded) rb.velocity = 
+                    new Vector2 {
+                        // Clamp (val, min, max); val의 값을 min과 max값의 사이의 범위로 강제하는 함수
+                        x = Mathf.Clamp(rb.velocity.x + (walkAcceleration * walkDirectionVector.x * Time.fixedDeltaTime),-MaxSpeed, MaxSpeed),
+                        y = rb.velocity.y
+                    };
+            else rb.velocity = new Vector2(Mathf.Clamp(rb.velocity.x, 0,walkStopRate), rb.velocity.y);
         }
     }
 

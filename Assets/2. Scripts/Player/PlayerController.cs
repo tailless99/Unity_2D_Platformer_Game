@@ -139,7 +139,7 @@ public class PlayerController : MonoBehaviour
 
     public void OnFire(InputAction.CallbackContext content)
     {
-        if (content.started && touchingDirections.IsGrounded)
+        if (content.started)
         {
             animator.SetTrigger(AnimationStrings.Attack);
         }

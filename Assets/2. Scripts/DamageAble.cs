@@ -11,6 +11,7 @@ public class DamageAble : MonoBehaviour
     Animator animator;
     public UnityEvent<int, int> healthChanged;
     public UnityEvent<Vector2> damageableHit;
+    public UnityEvent damageAbleDeath;
     public bool LockVelocity
     {
         get { return animator.GetBool(AnimationStrings.LockVelocity); }
@@ -40,6 +41,7 @@ public class DamageAble : MonoBehaviour
 
             if(_health <= 0)
             {
+                damageAbleDeath?.Invoke();
                 IsAlive = false;
             }
         }

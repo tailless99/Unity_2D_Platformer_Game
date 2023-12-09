@@ -6,6 +6,9 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/SampleScene.unity
-    guid: d1c3109bdb54ad54c8a2b2838528e640
+    path: Assets/1. Scenes/2DFlatformerGame.unity
+    guid: 006675979433e2144919c86948e8bba0
+  - enabled: 1
+    path: Assets/1. Scenes/QuitScene.unity
+    guid: b6bb57d50c9405b47b05bc9ee70ef940
   m_configObjects: {}

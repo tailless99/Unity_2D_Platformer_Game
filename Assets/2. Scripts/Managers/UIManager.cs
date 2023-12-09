@@ -2,13 +2,15 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 
 public class UIManager : MonoBehaviour
 {
     public GameObject damageTextPrefab;
     public GameObject healthTextPrefab;
     public Canvas gameCanvas;
-    
+
 
     private void Awake()
     {
@@ -32,7 +34,7 @@ public class UIManager : MonoBehaviour
 
     public void CharacterTookDamage(GameObject character, int damagereceived)
     {   // 대미지를 받을 때, 대미지를 출력
-        
+
         Vector3 spawnPosition = Camera.main.WorldToScreenPoint(character.transform.position);
         // 대미지를 받은 곳의 위치를 알기 위해 캔버스위 위치를 확인해야함
 
@@ -49,5 +51,23 @@ public class UIManager : MonoBehaviour
         TMP_Text tmpText = Instantiate(healthTextPrefab, spawnPosition, Quaternion.identity, gameCanvas.transform).GetComponent<TMP_Text>();
 
         tmpText.text = damagereceived.ToString();
+    }
+
+    public void OnExitGame(InputAction.CallbackContext context)
+    {
+        if (context.started)
+        {
+
+#if (UNITY_EDITOR || DEVELOPMENT_BUILD)
+            Debug.Log(this.name + " : " + this.GetType() + " : " + System.Reflection.MethodBase.GetCurrentMethod().Name);
+#endif
+#if(UNITY_EDITOR)
+            UnityEditor.EditorApplication.isPlaying = false;
+#elif (UNITY_STANDALONE)
+Application.Quit();
+#elif (UNITY_WEBGL)
+SceneManager.LoadScene("QuitScene");
+#endif
+        }
     }
 }

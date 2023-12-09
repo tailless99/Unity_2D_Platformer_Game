@@ -17,7 +17,7 @@ TagManager:
   - PlayerHitBox
   - EnuemyHitBox
   - GroundDetection
-  - 
+  - PickUp
   - 
   - 
   - 

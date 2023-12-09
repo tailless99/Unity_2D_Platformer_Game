@@ -801,7 +801,11 @@ MonoBehaviour:
         m_CallState: 2
     m_ActionId: 821b5bf0-118d-42bf-9300-26f006af9dcf
     m_ActionName: Player/RangedAttack[/Mouse/rightButton]
-  m_NeverAutoSwitchControlSchemes: 0
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: ec39f366-ba86-42de-bf9e-7ecfa054347b
+    m_ActionName: UI/Escape[/Keyboard/escape]
+  m_NeverAutoSwitchControlSchemes: 1
   m_DefaultControlScheme: 
   m_DefaultActionMap: Player
   m_SplitScreenIndex: -1
@@ -1416,7 +1420,7 @@ MonoBehaviour:
         m_CallState: 2
     m_ActionId: ec39f366-ba86-42de-bf9e-7ecfa054347b
     m_ActionName: UI/Escape[/Keyboard/escape]
-  m_NeverAutoSwitchControlSchemes: 0
+  m_NeverAutoSwitchControlSchemes: 1
   m_DefaultControlScheme: 
   m_DefaultActionMap: UI
   m_SplitScreenIndex: -1

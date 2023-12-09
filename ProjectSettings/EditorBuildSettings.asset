@@ -11,4 +11,5 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/1. Scenes/QuitScene.unity
     guid: b6bb57d50c9405b47b05bc9ee70ef940
-  m_configObjects: {}
+  m_configObjects:
+    com.unity.input.settings: {fileID: 11400000, guid: bd5ffd6b1af4fea4ca7aac50f05a5cc9, type: 2}
